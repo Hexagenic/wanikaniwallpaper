@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
 #include <stdlib.h>
 #include <png.h>
 

@@ -77,14 +77,17 @@ void draw(Order order, SDL_Surface *surface, SDL_Rect rect)
 	int w, h;
 	double wasted = findBest(order.size(), ratio, w, h);
 
-    int fontSize = rect.h / h;
+
+	double gridSize = double(rect.w) / double(w);
+
+    int fontSize = (int) gridSize;
 
 	Kanji::loadFont("/usr/share/fonts/OTF/ipag.ttf", fontSize);
 
     for(int i = 0; i < order.size(); i++)
 	{
-		int x = (i % w) * fontSize;
-		int y = (i / w) * fontSize;
+		int x = (i % w) * gridSize;
+		int y = (i / w) * gridSize;
 
 		order.kanji(i).draw(surface, x, y);
 	}

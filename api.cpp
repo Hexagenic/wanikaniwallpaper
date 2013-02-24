@@ -45,7 +45,6 @@ std::vector<Kanji> API::get(std::string key)
 		
         Knowledge knowledge;
 
-        SDL_Color col = {255, 255, 255};
 		if(srs == "apprentice")
 			knowledge = APPRENTICE;
 		else if(srs == "guru")
