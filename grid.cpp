@@ -77,23 +77,18 @@ void draw(Order order, SDL_Surface *surface, SDL_Rect rect)
 	int w, h;
 	double wasted = findBest(order.size(), ratio, w, h);
 
-
 	double contentRatio = double(w) / double(h);
-	double gridSize;
+	double gridWidth = double(rect.w) / double(w);
+	double gridHeight = double(rect.h) / double(h);
 
-	if(contentRatio < ratio)
-		gridSize = double(rect.h) / double(h); //Maximize height on tall grid 
-	else
-		gridSize = double(rect.w) / double(w); //maximize width on wide grid
-
-    int fontSize = (int) gridSize;
+    int fontSize = contentRatio < ratio ? (int) gridHeight : (int) gridWidth;
 
 	Kanji::loadFont("/usr/share/fonts/OTF/ipag.ttf", fontSize);
 
     for(int i = 0; i < order.size(); i++)
 	{
-		int x = (i % w) * gridSize;
-		int y = (i / w) * gridSize;
+		int x = (i % w) * gridWidth;
+		int y = (i / w) * gridHeight;
 
 		order.kanji(i).draw(surface, x, y);
 	}
