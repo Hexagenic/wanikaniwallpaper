@@ -87,8 +87,8 @@ void draw(Order order, SDL_Surface *surface, SDL_Rect rect)
 
     for(int i = 0; i < order.size(); i++)
 	{
-		int x = (i % w) * gridWidth;
-		int y = (i / w) * gridHeight;
+		int x = rect.x + (i % w) * gridWidth;
+		int y = rect.y + (i / w) * gridHeight;
 
 		order.kanji(i).draw(surface, x, y);
 	}
