@@ -78,7 +78,13 @@ void draw(Order order, SDL_Surface *surface, SDL_Rect rect)
 	double wasted = findBest(order.size(), ratio, w, h);
 
 
-	double gridSize = double(rect.w) / double(w);
+	double contentRatio = double(w) / double(h);
+	double gridSize;
+
+	if(contentRatio < ratio)
+		gridSize = double(rect.h) / double(h); //Maximize height on tall grid 
+	else
+		gridSize = double(rect.w) / double(w); //maximize width on wide grid
 
     int fontSize = (int) gridSize;
 
