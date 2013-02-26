@@ -4,13 +4,13 @@
 
 namespace wanikani
 {
-enum Knowledge {ERROR, UNKNOWN, APPRENTICE, GURU, MASTER, ENLIGHTENED};
+enum Knowledge {ERROR, UNSEEN, APPRENTICE, GURU, MASTER, ENLIGHTENED, BURNED};
 
 class Kanji
 {
 public:
 	Kanji();
-	Kanji(std::string character, Knowledge knowledge = UNKNOWN);
+	Kanji(std::string character, Knowledge knowledge = UNSEEN);
 	const std::string character() const;
 	const Knowledge knowledge() const;
 

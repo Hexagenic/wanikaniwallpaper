@@ -9,7 +9,7 @@ TTF_Font *Kanji::font_;
 
 Kanji::Kanji()
 	:character_("")
-	,knowledge_(UNKNOWN)
+	,knowledge_(UNSEEN)
 {
 }
 
@@ -35,7 +35,7 @@ void Kanji::draw(SDL_Surface *surface, int x, int y)
 
     switch(knowledge_)
 	{
-		case UNKNOWN:
+		case UNSEEN:
 			col = {40, 40, 40};
 			break;
 		case APPRENTICE:
@@ -49,6 +49,9 @@ void Kanji::draw(SDL_Surface *surface, int x, int y)
 			break;
 		case ENLIGHTENED:
 			col = {0, 147, 221};
+			break;
+		case BURNED:
+			col = {240, 240, 240};
 			break;
 		default:
 			col = {255, 0, 0};

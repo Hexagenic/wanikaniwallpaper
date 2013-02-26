@@ -53,6 +53,8 @@ std::vector<Kanji> API::get(std::string key)
 			knowledge = MASTER;
 		else if(srs == "enlighten")
 			knowledge = ENLIGHTENED;
+		else if(srs == "burned")
+			knowledge = BURNED;
 		else
 			knowledge = ERROR;
 
