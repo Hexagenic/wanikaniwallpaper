@@ -41,23 +41,29 @@ std::vector<Kanji> API::get(std::string key)
 	for(int i = 0; i < requested_information.size(); i++)
 	{
 		std::string character = requested_information[i]["character"].asString();
-		std::string srs = requested_information[i]["stats"]["srs"].asString();
 		
-        Knowledge knowledge;
-
-		if(srs == "apprentice")
-			knowledge = APPRENTICE;
-		else if(srs == "guru")
-			knowledge = GURU;
-		else if(srs == "master")
-			knowledge = MASTER;
-		else if(srs == "enlighten")
-			knowledge = ENLIGHTENED;
-		else if(srs == "burned")
-			knowledge = BURNED;
+		Json::Value stats = requested_information[i]["stats"];
+		Knowledge knowledge;
+		
+		if(stats.isNull())
+			knowledge = UNSEEN;
 		else
-			knowledge = ERROR;
+		{
+			std::string srs = requested_information[i]["stats"]["srs"].asString();
 
+			if(srs == "apprentice")
+				knowledge = APPRENTICE;
+			else if(srs == "guru")
+				knowledge = GURU;
+			else if(srs == "master")
+				knowledge = MASTER;
+			else if(srs == "enlighten")
+				knowledge = ENLIGHTENED;
+			else if(srs == "burned")
+				knowledge = BURNED;
+			else
+				knowledge = ERROR;
+		}
 		list.push_back(Kanji(character, knowledge));
 	}
 
