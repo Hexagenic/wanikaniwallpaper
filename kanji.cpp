@@ -9,13 +9,13 @@ TTF_Font *Kanji::font_;
 
 Kanji::Kanji()
 	:character_("")
-	,knowledge_(UNSEEN)
+	,SRS_(SRS_UNSEEN)
 {
 }
 
-Kanji::Kanji(string character, Knowledge knowledge)
+Kanji::Kanji(string character, WaniKaniSRS SRS)
 	:character_(character)
-	,knowledge_(knowledge)
+	,SRS_(SRS)
 {
 }
 
@@ -24,33 +24,33 @@ const string Kanji::character() const
 	return character_;
 }
 
-const Knowledge Kanji::knowledge() const
+const WaniKaniSRS Kanji::SRS() const
 {
-	return knowledge_;
+	return SRS_;
 }
 
 void Kanji::draw(SDL_Surface *surface, int x, int y)
 {
     SDL_Color col = {0, 0, 0};
 
-    switch(knowledge_)
+    switch(SRS_)
 	{
-		case UNSEEN:
+		case SRS_UNSEEN:
 			col = {40, 40, 40};
 			break;
-		case APPRENTICE:
+		case SRS_APPRENTICE:
 			col = {221, 0, 147};
 			break;
-		case GURU:
+		case SRS_GURU:
 			col = {136, 45, 158};
 			break;
-		case MASTER:
+		case SRS_MASTER:
 			col = {41, 77, 219};
 			break;
-		case ENLIGHTENED:
+		case SRS_ENLIGHTENED:
 			col = {0, 147, 221};
 			break;
-		case BURNED:
+		case SRS_BURNED:
 			col = {240, 240, 240};
 			break;
 		default:

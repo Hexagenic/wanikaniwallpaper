@@ -4,15 +4,15 @@
 
 namespace wanikani
 {
-enum Knowledge {ERROR, UNSEEN, APPRENTICE, GURU, MASTER, ENLIGHTENED, BURNED};
+enum WaniKaniSRS {SRS_ERROR, SRS_UNSEEN, SRS_APPRENTICE, SRS_GURU, SRS_MASTER, SRS_ENLIGHTENED, SRS_BURNED};
 
 class Kanji
 {
 public:
 	Kanji();
-	Kanji(std::string character, Knowledge knowledge = UNSEEN);
+	Kanji(std::string character, WaniKaniSRS SRS = SRS_UNSEEN);
 	const std::string character() const;
-	const Knowledge knowledge() const;
+	const WaniKaniSRS SRS() const;
 
 	void draw(SDL_Surface *surface, int x, int y);
 
@@ -20,7 +20,7 @@ public:
 	static void unloadFont();	
 private:
 	std::string character_;
-	Knowledge knowledge_;
+	WaniKaniSRS SRS_;
 	static TTF_Font *font_;
 
 };
