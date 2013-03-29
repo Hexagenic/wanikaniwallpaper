@@ -4,90 +4,80 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <utf8.h>
+#include <vector>
 using std::string;
 
 namespace wanikani
 {
-Order::Order(string filename)
-{
-	std::ifstream orderFile;
-	orderFile.open(filename.c_str());
-
-    char c;
-
-	int index = 0;
-
-	while(orderFile.good())
+	Order::Order(string filename)
 	{
-		orderFile.get(c);
+		std::ifstream orderFile;
+		orderFile.open(filename.c_str());
 
-		if(c == 10)
-			continue;
-		else if(c <= -23 && c >= -29) // dirty way to get multi-byte characters
+		orderFile.seekg(0, orderFile.end);
+		int length = orderFile.tellg();
+		orderFile.seekg(0, orderFile.beg);
+
+		char *buffer = new char[length];
+
+		orderFile.read(buffer, length);
+
+		orderFile.close();
+
+		std::vector<int> wideString;
+		utf8::utf8to32(buffer, buffer + length, back_inserter(wideString));
+
+		int index = 0;
+		for(int i = 0; i < wideString.size(); i++)
 		{
-			std::stringstream charstream;
-			charstream << c;
-			orderFile.get(c);
-			charstream << c;
-			orderFile.get(c);
-			charstream << c;
+			int character = wideString[i];
+			if(character != 10)
+			{
+				Kanji kanji(character);
 
-			std::string character(charstream.str());
-			Kanji kanji(character);
-
-            intToChar_[index] = character;
-			charToInt_[character] = index;
-			charToKanji_[character] = kanji;
-
-			index++;
+				intToChar_[index] = character;
+				charToInt_[character] = index;
+				charToKanji_[character] = kanji;
+				index++;
+			}
 		}
-		else
+
+	}
+
+	void Order::update(std::vector<Kanji> list)
+	{
+		for(std::vector<Kanji>::iterator i = list.begin(); i!= list.end(); i++)
 		{
-			std::cout << "Unknown bytcode: " << (int) c << std::endl;
+			std::map<int, Kanji>::iterator k = charToKanji_.find(i->character());
+			if(k != charToKanji_.end())
+			{
+				k->second = *i;
+			}
+			else
+				std::cout << "Kanji from WaniKani not found in file: " << i->character() << std::endl;
 		}
 	}
 
-    orderFile.close();
-}
-
-void Order::update(std::vector<Kanji> list)
-{
-	for(std::vector<Kanji>::iterator i = list.begin(); i!= list.end(); i++)
+	int Order::position(int character)
 	{
-		std::map<std::string, Kanji>::iterator k = charToKanji_.find(i->character());
-		if(k != charToKanji_.end())
-		{
-			k->second = *i;
-		}
-		else
-			std::cout << "Kanji from WaniKani not found in file: " << i->character() << std::endl;
+		return charToInt_[character];
 	}
-}
 
-int Order::position(std::string character)
-{
-    return charToInt_[character];
-}
+	int Order::character(int position)
+	{
+		return intToChar_[position];
+	}
 
-std::string Order::character(int position)
-{
-	return intToChar_[position];
-}
+	Kanji Order::kanji(int position)
+	{
+		const int character = intToChar_[position];
+		return charToKanji_[character];
+	}
 
-Kanji Order::kanji(std::string character)
-{
-	return charToKanji_[character];
-}
-
-Kanji Order::kanji(int position)
-{
-	const std::string character = intToChar_[position];
-	return charToKanji_[character];
-}
-
-int Order::size()
-{
-	return intToChar_.size();
-}
+	int Order::size()
+	{
+		return intToChar_.size();
+	}
 
 } //wanikani

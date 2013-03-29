@@ -2,6 +2,7 @@
 #include <sstream>
 #include <curl/curl.h>
 #include <jsoncpp/json/json.h>
+#include <utf8.h>
 
 std::stringstream buffer;
 
@@ -41,7 +42,15 @@ std::vector<Kanji> API::get(std::string key)
 	for(int i = 0; i < requested_information.size(); i++)
 	{
 		std::string character = requested_information[i]["character"].asString();
-		
+
+		const char *c_char = character.c_str();
+
+		std::vector<int> wideChar;
+		utf8::utf8to32(c_char, c_char + character.size(), back_inserter(wideChar));
+
+        if(wideChar.size() != 1)
+			std::cout << "Problem with: " << character << std::endl;
+
 		Json::Value stats = requested_information[i]["stats"];
 		WaniKaniSRS SRS;
 		
@@ -64,7 +73,7 @@ std::vector<Kanji> API::get(std::string key)
 			else
 				SRS = SRS_ERROR;
 		}
-		list.push_back(Kanji(character, SRS));
+		list.push_back(Kanji(wideChar[0], SRS));
 	}
 
 	return list;

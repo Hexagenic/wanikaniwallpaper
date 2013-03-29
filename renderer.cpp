@@ -1,0 +1,165 @@
+#include "renderer.hpp"
+#include <iostream>
+#include <stdlib.h>
+#include <stdint.h>
+#include <png.h>
+#include "grid.hpp"
+#include <iomanip>
+void png_user_warn(png_structp ctx, png_const_charp str)
+{
+	std::cerr << "libPNG warning: " << str << std::endl; 
+}
+
+void png_user_error(png_structp ctx, png_const_charp str)
+{
+	std::cerr << "libPNG error: " << str << std::endl; 
+}
+
+void renderGlyph(FT_Face &face, int charCode)
+{
+	FT_Load_Char(face, charCode, FT_LOAD_DEFAULT);
+	FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL);
+}
+
+uint32_t lerp(uint32_t a, uint32_t b, double x)
+{
+    uint8_t aR = (0xFF & a);
+	uint8_t aG = (0xFF00 & a) >> 8;
+	uint8_t aB = (0xFF0000 & a) >> 16;
+    
+	uint8_t bR = (0xFF & b);
+	uint8_t bG = (0xFF00 & b) >> 8;
+	uint8_t bB = (0xFF0000 & b) >> 16;
+
+	uint8_t oR = (aR * x) + (bR * (1 - x));
+	uint8_t oG = (aG * x) + (bG * (1 - x));
+	uint8_t oB = (aB * x) + (bB * (1 - x));
+
+    if(oR > 0xFF || oR < 0)
+		std::cout << oR << std::endl;
+
+	return (0xFF << 24) + (oB << 16) + (oG << 8) + oR;
+}
+
+namespace wanikani
+{
+
+Renderer::Renderer(int width, int height, std::string fontName)
+	:width_(width)
+	,height_(height)
+	,buffer_(new int[width * height]())
+{
+	
+	std::cout << "Buffer size: " << width * height << std::endl;
+	int error = 0;
+
+	error = FT_Init_FreeType(&library_);
+	if(error)
+		std::cerr << "Failed to initialize freetype library, code: " << error << std::endl;
+
+	error = FT_New_Face(library_, fontName.c_str(), 0, &face_);
+	if(error)
+		std::cerr << "Failed to load font face: " << fontName << ", code: " << error << std::endl;
+}
+
+void Renderer::render(Order &order)
+{
+    //Set background
+	for(int x = 0; x < width_; x++)
+	{
+		for(int y = 0; y < height_; y++)
+		{
+			int pos = x + (y * width_);
+
+			buffer_[pos] = 0xFF000000;
+		}
+	}
+	
+	double ratio = double(width_) / double(height_);	
+	int w, h;
+	double wasted = grid::findBest(order.size(), ratio, w, h);
+	double contentRatio = double(w) / double(h);
+	double characterWidth = double(width_) / double(w);
+	double characterHeight = double(height_) / double(h);
+    int fontSize = contentRatio < ratio ? (int) characterHeight : (int) characterWidth;
+	FT_Select_Charmap(face_, ft_encoding_unicode);
+	FT_Set_Pixel_Sizes(face_, 0, fontSize);
+
+	for(int i = 0; i < order.size(); i++)
+	{
+		int gridX = (i % w) * characterWidth;
+		int gridY = (i / w) * characterHeight;
+
+		renderGlyph(face_, order.kanji(i).character());
+		FT_GlyphSlot glyph = face_->glyph;
+		FT_Bitmap bitmap = glyph->bitmap;
+
+		int glyphWidth = bitmap.width;	
+		int glyphHeight = bitmap.rows;
+		int glyphLeft = glyph->bitmap_left;
+		int glyphTop = fontSize - glyph->bitmap_top;
+
+		for(int glyphX = 0; glyphX < glyphWidth; glyphX++)
+		{
+			for(int glyphY = 0; glyphY < glyphHeight; glyphY++)
+			{
+				int x = gridX + glyphX + glyphLeft;
+				int y = gridY + glyphY + glyphTop;
+				int pos = x + y * width_;
+
+				int glyphPos = glyphX + glyphY * glyphWidth;
+
+				if(pos < width_ * height_)
+				{
+					int aCol = order.kanji(i).color();
+                    int bCol = buffer_[pos];
+                    double alpha = double(bitmap.buffer[glyphPos]) / double(0xFF);
+					
+					int nCol = lerp(aCol, bCol, alpha);
+
+					buffer_[pos] = nCol;
+				}
+			}
+		}
+	}
+}
+
+void Renderer::save(std::string fileName)
+{
+	FILE *file = fopen(fileName.c_str(), "wb");
+
+	png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, png_user_error, png_user_warn);
+	png_infop info_ptr = png_create_info_struct(png_ptr);
+
+	setjmp(png_jmpbuf(png_ptr));
+
+	png_init_io(png_ptr, file);
+
+	png_set_IHDR(
+			png_ptr, 
+			info_ptr, 
+			width_, 
+			height_, 
+			8, 
+			PNG_COLOR_TYPE_RGBA, 
+			PNG_INTERLACE_NONE, 
+			PNG_COMPRESSION_TYPE_DEFAULT,
+			PNG_FILTER_TYPE_DEFAULT);
+
+	png_write_info(png_ptr, info_ptr);
+	png_set_packing(png_ptr);
+
+	png_bytep *row_pointers = (png_bytep*) malloc(sizeof(png_bytep) * height_ * 4);
+
+	for(int i = 0; i < height_; i++)
+		row_pointers[i] = (png_bytep)buffer_ + i * width_ * 4;
+
+	png_write_image(png_ptr, row_pointers);
+	png_write_end(png_ptr, info_ptr);
+
+	free(row_pointers);
+	png_destroy_write_struct(&png_ptr, &info_ptr);
+	fclose(file);
+}
+
+}

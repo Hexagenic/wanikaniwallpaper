@@ -1,6 +1,10 @@
 #include "grid.hpp"
-
 #include <iostream>
+
+namespace wanikani
+{
+namespace grid
+{
 
 double wastedSpace(int width, int &height, int num, double spaceRatio)
 {
@@ -42,7 +46,6 @@ double wastedSpace(int width, int &height, int num, double spaceRatio)
 
 double findBest(int num, double spaceRatio, int &width, int &height)
 {
-
     int bestWidth = -1;
 	int bestHeight = -1;
 	double bestWasted = -1;
@@ -67,33 +70,6 @@ double findBest(int num, double spaceRatio, int &width, int &height)
 
 	return bestWasted;
 }
-
-namespace wanikani
-{
-
-void draw(Order order, SDL_Surface *surface, SDL_Rect rect)
-{
-	double ratio = double(rect.w) / double(rect.h);
-	int w, h;
-	double wasted = findBest(order.size(), ratio, w, h);
-
-	double contentRatio = double(w) / double(h);
-	double gridWidth = double(rect.w) / double(w);
-	double gridHeight = double(rect.h) / double(h);
-
-    int fontSize = contentRatio < ratio ? (int) gridHeight : (int) gridWidth;
-
-	Kanji::loadFont("/usr/share/fonts/OTF/ipag.ttf", fontSize);
-
-    for(int i = 0; i < order.size(); i++)
-	{
-		int x = rect.x + (i % w) * gridWidth;
-		int y = rect.y + (i / w) * gridHeight;
-
-		order.kanji(i).draw(surface, x, y);
-	}
-
-	Kanji::unloadFont();	
 
 }
 }
