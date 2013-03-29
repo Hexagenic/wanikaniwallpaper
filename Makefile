@@ -2,7 +2,7 @@
 SRC_FILES=$(wildcard *.cpp)
 OBJ_FILES=$(patsubst %.cpp,%.o, ${SRC_FILES}) 
 HEADER_FILES=$(wildcard *.hpp)
-LIBS=-lSDL -lSDL_ttf -lcurl -ljsoncpp -lpng -lfreetype
+LIBS=-lcurl -ljsoncpp -lpng -lfreetype
 
 wanikaniwallpaper: ${OBJ_FILES}
 	g++ -std=c++11 ${OBJ_FILES} ${LIBS} -o wanikaniwallpaper

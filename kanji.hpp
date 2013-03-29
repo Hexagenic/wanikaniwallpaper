@@ -12,7 +12,6 @@ public:
 	const int character() const;
 	const WaniKaniSRS SRS() const;
 	const unsigned int color() const;
-	//void draw(SDL_Surface *surface, int x, int y);
 
 private:
 	int character_;
