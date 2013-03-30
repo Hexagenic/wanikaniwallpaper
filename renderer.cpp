@@ -47,6 +47,10 @@ namespace wanikani
 Renderer::Renderer(int width, int height, std::string fontName)
 	:width_(width)
 	,height_(height)
+	,marginLeft_(0)
+	,marginRight_(0)
+	,marginTop_(0)
+	,marginBottom_(0)
 	,buffer_(new int[width * height]())
 {
 	
@@ -62,6 +66,14 @@ Renderer::Renderer(int width, int height, std::string fontName)
 		std::cerr << "Failed to load font face: " << fontName << ", code: " << error << std::endl;
 }
 
+void Renderer::setMargins(int left, int right, int top, int bottom)
+{
+	marginLeft_ = left;
+	marginRight_ = right;
+	marginTop_ = top;
+	marginBottom_ = bottom;
+}
+
 void Renderer::render(Order &order)
 {
     //Set background
@@ -75,20 +87,23 @@ void Renderer::render(Order &order)
 		}
 	}
 	
-	double ratio = double(width_) / double(height_);	
+    double width = width_ - marginLeft_ - marginRight_;
+	double height = height_ - marginTop_ - marginBottom_;
+
+	double ratio = width / height;	
 	int w, h;
 	double wasted = grid::findBest(order.size(), ratio, w, h);
 	double contentRatio = double(w) / double(h);
-	double characterWidth = double(width_) / double(w);
-	double characterHeight = double(height_) / double(h);
+	double characterWidth = width / double(w);
+	double characterHeight = height / double(h);
     int fontSize = contentRatio < ratio ? (int) characterHeight : (int) characterWidth;
 	FT_Select_Charmap(face_, ft_encoding_unicode);
 	FT_Set_Pixel_Sizes(face_, 0, fontSize);
 
 	for(int i = 0; i < order.size(); i++)
 	{
-		int gridX = (i % w) * characterWidth;
-		int gridY = (i / w) * characterHeight;
+		int gridX = (i % w) * characterWidth + marginLeft_;
+		int gridY = (i / w) * characterHeight + marginTop_;
 
 		renderGlyph(face_, order.kanji(i).character());
 		FT_GlyphSlot glyph = face_->glyph;

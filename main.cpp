@@ -2,19 +2,27 @@
 #include "order.hpp"
 #include "api.hpp"
 #include "renderer.hpp"
+#include "options.hpp"
 
 int main(int argc, char **argv)
 {
-	if(argc != 2)
-		return 1;
+	wanikani::Options options(argc, argv);
 
-	wanikani::Renderer renderer(1024, 600, "/usr/share/fonts/OTF/ipag.ttf");
+	if(!options.helpRequested() && options.apikey())
+	{
+		wanikani::Renderer renderer(options.width(), options.height(), options.fontFileName());
 
-	wanikani::Order order;
+		wanikani::Order order;
 
-	order.update(wanikani::API::get(argv[1]));
+		order.update(wanikani::API::get(options.apikey().get()));
 
-    renderer.render(order);
-    renderer.save("out.png");
+		renderer.setMargins(options.marginLeft(), options.marginRight(), options.marginTop(), options.marginBottom());
+		renderer.render(order);
+		renderer.save(options.outFileName());
+	}
+	else if (!options.apikey() && !options.helpRequested())
+	{
+		std::cout << "Please provide an apikey. More info with --help.\n";
+	}
 	return 0;
 }
