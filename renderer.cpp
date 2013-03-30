@@ -5,6 +5,7 @@
 #include <png.h>
 #include "grid.hpp"
 #include <iomanip>
+
 void png_user_warn(png_structp ctx, png_const_charp str)
 {
 	std::cerr << "libPNG warning: " << str << std::endl; 
@@ -13,12 +14,25 @@ void png_user_warn(png_structp ctx, png_const_charp str)
 void png_user_error(png_structp ctx, png_const_charp str)
 {
 	std::cerr << "libPNG error: " << str << std::endl; 
+	exit(0);
 }
 
 void renderGlyph(FT_Face &face, int charCode)
 {
-	FT_Load_Char(face, charCode, FT_LOAD_DEFAULT);
-	FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL);
+	int error;
+	error = FT_Load_Char(face, charCode, FT_LOAD_DEFAULT);
+	if(error)
+	{
+		std::cerr << "Could not find character in font face, code: " << error << std::endl;
+		exit(0);
+	}
+
+	error = FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL);
+	if(error)
+	{
+		std::cerr << "Could not render glyph, code: " << error << std::endl;
+		exit(0);
+	}
 }
 
 uint32_t lerp(uint32_t a, uint32_t b, double x)
@@ -53,17 +67,21 @@ Renderer::Renderer(int width, int height, std::string fontName)
 	,marginBottom_(0)
 	,buffer_(new int[width * height]())
 {
-	
-	std::cout << "Buffer size: " << width * height << std::endl;
 	int error = 0;
 
 	error = FT_Init_FreeType(&library_);
 	if(error)
+	{
 		std::cerr << "Failed to initialize freetype library, code: " << error << std::endl;
+		exit(1);
+	}
 
 	error = FT_New_Face(library_, fontName.c_str(), 0, &face_);
 	if(error)
+	{
 		std::cerr << "Failed to load font face: " << fontName << ", code: " << error << std::endl;
+		exit(1);
+	}
 }
 
 void Renderer::setMargins(int left, int right, int top, int bottom)
@@ -142,6 +160,12 @@ void Renderer::render(Order &order)
 void Renderer::save(std::string fileName)
 {
 	FILE *file = fopen(fileName.c_str(), "wb");
+
+    if(file == NULL)
+	{
+		std::cerr << "Could not open " << fileName << " for writing, code: " << errno << std::endl;
+		exit(0);
+	}
 
 	png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, png_user_error, png_user_warn);
 	png_infop info_ptr = png_create_info_struct(png_ptr);

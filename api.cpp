@@ -1,4 +1,5 @@
 #include "api.hpp"
+#include <iostream>
 #include <sstream>
 #include <curl/curl.h>
 #include <jsoncpp/json/json.h>
@@ -25,11 +26,16 @@ std::vector<Kanji> API::get(std::string key)
 
 	if(curl)
 	{
-		std::string url = "http://www.wanikani.com/api/user/" + key + "/kanji";
+		std::string url = "http://www.wanikani.com/api/v1/user/" + key + "/kanji";
 
 		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
 		res = curl_easy_perform(curl);
+	}
+	if(res)
+	{
+		std::cerr << "Error accesing api, code: " << res << std::endl;
+		exit(1);
 	}
 	
 	Json::Value root;
