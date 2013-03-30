@@ -17,6 +17,15 @@ int main(int argc, char **argv)
 		order.update(wanikani::API::get(options.apikey().get()));
 
 		renderer.setMargins(options.marginLeft(), options.marginRight(), options.marginTop(), options.marginBottom());
+		renderer.setBackground(options.colorBackground());
+		renderer.setUnseen(options.colorUnseen());
+		renderer.setApprentice(options.colorApprentice());
+		renderer.setGuru(options.colorGuru());
+		renderer.setMaster(options.colorMaster());
+		renderer.setEnlightened(options.colorEnlightened());
+		renderer.setBurned(options.colorBurned());
+		renderer.setError(options.colorError());
+		
 		renderer.render(order);
 		renderer.save(options.outFileName());
 	}

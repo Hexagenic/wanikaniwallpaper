@@ -101,7 +101,7 @@ void Renderer::render(Order &order)
 		{
 			int pos = x + (y * width_);
 
-			buffer_[pos] = 0xFF000000;
+			buffer_[pos] = colorBackground_.ABGR();
 		}
 	}
 	
@@ -144,7 +144,7 @@ void Renderer::render(Order &order)
 
 				if(pos < width_ * height_)
 				{
-					int aCol = order.kanji(i).color();
+					int aCol = SRSColor(order.kanji(i).SRS()).ABGR();
                     int bCol = buffer_[pos];
                     double alpha = double(bitmap.buffer[glyphPos]) / double(0xFF);
 					
@@ -200,5 +200,36 @@ void Renderer::save(std::string fileName)
 	png_destroy_write_struct(&png_ptr, &info_ptr);
 	fclose(file);
 }
+
+void Renderer::setBackground(Color color) { colorBackground_ = color; }
+void Renderer::setUnseen(Color color) { colorUnseen_ = color; }
+void Renderer::setApprentice(Color color) { colorApprentice_ = color; }
+void Renderer::setGuru(Color color) { colorGuru_ = color; }
+void Renderer::setMaster(Color color) { colorMaster_ = color; }
+void Renderer::setEnlightened(Color color) { colorEnlightened_ = color; }
+void Renderer::setBurned(Color color) { colorBurned_ = color; }
+void Renderer::setError(Color color) { colorError_ = color; }
+
+Color Renderer::SRSColor(WaniKaniSRS srs)
+{
+	switch(srs)
+	{
+		case SRS_UNSEEN:
+			return colorUnseen_;
+		case SRS_APPRENTICE:
+			return colorApprentice_;
+		case SRS_GURU:
+			return colorGuru_;
+		case SRS_MASTER:
+            return colorMaster_;
+		case SRS_ENLIGHTENED:
+			return colorEnlightened_;
+		case SRS_BURNED:
+			return colorBurned_;
+		default:
+			return colorError_;
+	}
+}	
+
 
 }

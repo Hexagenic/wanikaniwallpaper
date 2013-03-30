@@ -11,6 +11,16 @@ namespace wanikani
 Options::Options(int argc, char **argv)
 	:helpRequested_(false)
 {
+
+	std::string colorBackgroundString, 
+		colorUnseenString, 
+		colorApprenticeString,
+		colorGuruString,
+		colorMasterString,
+		colorEnlightenedString,
+		colorBurnedString,
+		colorErrorString;
+
 	po::options_description cmdline("Command line options");
 	cmdline.add_options()
 		("apikey,k", po::value<std::string>(), "API key")
@@ -22,6 +32,14 @@ Options::Options(int argc, char **argv)
 		("margin-right", po::value<int>(&marginRight_)->default_value(0), "Space to leave blank to the right")
 		("margin-top", po::value<int>(&marginTop_)->default_value(0), "Space to leave blank to the top")
 		("margin-bottom", po::value<int>(&marginBottom_)->default_value(0), "Space to leave blank to the bottom")
+		("color-background", po::value<std::string>(&colorBackgroundString)->default_value("#000000"), "Color for background")
+		("color-unseen", po::value<std::string>(&colorUnseenString)->default_value("#303030"), "Color for unseen characters")
+		("color-apprentice", po::value<std::string>(&colorApprenticeString)->default_value("#DD0093"), "Color for apprentice characters")
+		("color-guru", po::value<std::string>(&colorGuruString)->default_value("#882D9E"), "Color for guru characters")
+		("color-master", po::value<std::string>(&colorMasterString)->default_value("#294DDB"), "Color for master characters")
+		("color-enlightened", po::value<std::string>(&colorEnlightenedString)->default_value("#0093DD"), "Color for enlightened characters")
+		("color-burned", po::value<std::string>(&colorBurnedString)->default_value("#FFFFFF"), "Color for burned characters")
+		("color-error", po::value<std::string>(&colorErrorString)->default_value("#FF0000"), "Color for error\'ed characters")
 		("help", "Produce this help message")
 		;
 
@@ -48,6 +66,14 @@ Options::Options(int argc, char **argv)
 		apikey_ = vm["apikey"].as<std::string>();
 	}
 
+	colorBackground_ = Color(colorBackgroundString);
+	colorUnseen_ = Color(colorUnseenString);
+	colorApprentice_ = Color(colorApprenticeString);
+	colorGuru_ = Color(colorGuruString);
+	colorMaster_ = Color(colorMasterString);
+	colorEnlightened_ = Color(colorEnlightenedString);
+	colorBurned_ = Color(colorBurnedString);
+	colorError_ = Color(colorErrorString);
 }
 
 const boost::optional<std::string> Options::apikey() const
@@ -79,6 +105,15 @@ const int Options::marginLeft() const { return marginLeft_; }
 const int Options::marginRight() const { return marginRight_; }
 const int Options::marginTop() const { return marginTop_; }
 const int Options::marginBottom() const { return marginBottom_; }
+
+const Color Options::colorBackground() const { return colorBackground_; }
+const Color Options::colorUnseen() const { return colorUnseen_; }
+const Color Options::colorApprentice() const { return colorApprentice_; }
+const Color Options::colorGuru() const { return colorGuru_; }
+const Color Options::colorMaster() const { return colorMaster_; }
+const Color Options::colorEnlightened() const { return colorEnlightened_; }
+const Color Options::colorBurned() const { return colorBurned_; }
+const Color Options::colorError() const { return colorError_; }
 
 const bool Options::helpRequested() const
 {
