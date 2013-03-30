@@ -1,6 +1,7 @@
 #include "options.hpp"
 #include <boost/program_options.hpp>
 #include <iostream>
+#include <fstream>
 
 namespace po = boost::program_options;
 
@@ -26,11 +27,19 @@ Options::Options(int argc, char **argv)
 
 	po::variables_map vm;
 	po::store(po::parse_command_line(argc, argv, cmdline), vm);
+	
+	std::ifstream config_file("config.ini", std::ifstream::in);
+	if(config_file.good())
+	{
+		po::store(po::parse_config_file(config_file, cmdline), vm);
+	}
+	
 	po::notify(vm);
 
 	if(vm.count("help"))
 	{
 		std::cout << cmdline << std::endl;
+		std::cout << "These options can also be saved in a config.ini file in this directory.\n";
 		helpRequested_ = true;
 	}
 
