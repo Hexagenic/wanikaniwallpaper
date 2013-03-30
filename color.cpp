@@ -87,11 +87,11 @@ uint32_t Color::compToABGR(uint8_t red, uint8_t green, uint8_t blue, uint8_t alp
 
 uint32_t Color::hexToABGR(const std::string hexcode)
 {
-    if(hexcode.size() == 7 && hexcode[0] == '#')
+    if(hexcode.size() == 8 && hexcode[0] == '0' && hexcode[1] == 'x')
 	{
-		uint8_t red = (hexToInt(hexcode[1])<<4) + hexToInt(hexcode[2]); 
-		uint8_t green = (hexToInt(hexcode[3])<<4) + hexToInt(hexcode[4]); 
-		uint8_t blue = (hexToInt(hexcode[5])<<4) + hexToInt(hexcode[6]); 
+		uint8_t red = (hexToInt(hexcode[2])<<4) + hexToInt(hexcode[3]); 
+		uint8_t green = (hexToInt(hexcode[4])<<4) + hexToInt(hexcode[5]); 
+		uint8_t blue = (hexToInt(hexcode[6])<<4) + hexToInt(hexcode[7]); 
         return compToABGR(red, green, blue);
 
 	}

@@ -1,5 +1,6 @@
 #include "api.hpp"
 #include <iostream>
+#include <stdlib.h>
 #include <sstream>
 #include <curl/curl.h>
 #include <jsoncpp/json/json.h>

@@ -1,6 +1,7 @@
 #include "renderer.hpp"
 #include <iostream>
 #include <stdlib.h>
+#include <errno.h>
 #include <stdint.h>
 #include <png.h>
 #include "grid.hpp"
@@ -14,7 +15,7 @@ void png_user_warn(png_structp ctx, png_const_charp str)
 void png_user_error(png_structp ctx, png_const_charp str)
 {
 	std::cerr << "libPNG error: " << str << std::endl; 
-	exit(0);
+	exit(1);
 }
 
 void renderGlyph(FT_Face &face, int charCode)
@@ -24,14 +25,14 @@ void renderGlyph(FT_Face &face, int charCode)
 	if(error)
 	{
 		std::cerr << "Could not find character in font face, code: " << error << std::endl;
-		exit(0);
+		exit(1);
 	}
 
 	error = FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL);
 	if(error)
 	{
 		std::cerr << "Could not render glyph, code: " << error << std::endl;
-		exit(0);
+		exit(1);
 	}
 }
 
@@ -164,7 +165,7 @@ void Renderer::save(std::string fileName)
     if(file == NULL)
 	{
 		std::cerr << "Could not open " << fileName << " for writing, code: " << errno << std::endl;
-		exit(0);
+		exit(1);
 	}
 
 	png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, png_user_error, png_user_warn);

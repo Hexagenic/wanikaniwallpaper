@@ -5,7 +5,7 @@ HEADER_FILES=$(wildcard *.hpp)
 LIBS=-lcurl -ljsoncpp -lpng -lfreetype -lboost_program_options
 
 wanikaniwallpaper: ${OBJ_FILES}
-	g++ -std=c++11 ${OBJ_FILES} ${LIBS} -o wanikaniwallpaper
+	g++  ${OBJ_FILES} ${LIBS} -o wanikaniwallpaper
 
 %.o: %.cpp ${HEADER_FILES}
-	g++ -std=c++11 -I/usr/include/freetype2 -o $@ $< -c
+	g++ -I/usr/include/freetype2 -o $@ $< -c
