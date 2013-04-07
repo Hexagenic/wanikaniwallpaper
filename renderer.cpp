@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <stdint.h>
+#define PNG_SKIP_SETJMP_CHECK
 #include <png.h>
 #include "grid.hpp"
 #include <iomanip>

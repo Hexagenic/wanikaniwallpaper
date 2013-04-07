@@ -1,6 +1,7 @@
 #include "order.hpp"
 #include "kanji.hpp"
 
+#include <stdlib.h>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -14,6 +15,12 @@ namespace wanikani
 	{
 		std::ifstream orderFile;
 		orderFile.open(filename.c_str());
+
+        if(orderFile.fail())
+		{
+			std::cerr << "Could no open file " << filename << " for reading.\n";
+			exit(1);
+		}
 
 		orderFile.seekg(0, orderFile.end);
 		int length = orderFile.tellg();
