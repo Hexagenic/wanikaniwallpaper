@@ -9,8 +9,9 @@ Kanji::Kanji()
 {
 }
 
-Kanji::Kanji(int character, WaniKaniSRS SRS)
+Kanji::Kanji(int character, std::string utf8Character, WaniKaniSRS SRS)
 	:character_(character)
+	,utf8Character_(utf8Character)
 	,SRS_(SRS)
 {
 }
@@ -18,6 +19,11 @@ Kanji::Kanji(int character, WaniKaniSRS SRS)
 const int Kanji::character() const
 {
 	return character_;
+}
+
+const std::string  Kanji::utf8Character() const
+{
+	return utf8Character_;
 }
 
 const WaniKaniSRS Kanji::SRS() const

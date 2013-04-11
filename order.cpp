@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <sstream>
 #include <utf8.h>
@@ -39,9 +40,13 @@ namespace wanikani
 		for(int i = 0; i < wideString.size(); i++)
 		{
 			int character = wideString[i];
+
+
 			if(character != 10)
 			{
-				Kanji kanji(character);
+				std::string utf8Character;
+				utf8::utf32to8(wideString.begin() + i, wideString.begin() + i, back_inserter(utf8Character));
+				Kanji kanji(character, utf8Character);
 
 				intToChar_[index] = character;
 				charToInt_[character] = index;
@@ -62,7 +67,8 @@ namespace wanikani
 				k->second = *i;
 			}
 			else
-				std::cout << "Kanji from WaniKani not found in file: " << i->character() << std::endl;
+				std::cout << "Kanji from WaniKani not found in file: " << i->utf8Character() 
+					<< ", utf32: " << std::hex << i->character() << std::dec << std::endl;
 		}
 	}
 

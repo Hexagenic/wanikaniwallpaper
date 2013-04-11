@@ -104,7 +104,7 @@ std::vector<Kanji> API::get(std::string key)
 			else
 				SRS = SRS_ERROR;
 		}
-		list.push_back(Kanji(wideChar[0], SRS));
+		list.push_back(Kanji(wideChar[0], character, SRS));
 	}
 
 	return list;
