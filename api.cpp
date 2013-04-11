@@ -24,10 +24,10 @@ std::vector<Kanji> API::get(std::string key)
 
 	CURL *curl = curl_easy_init();
 	CURLcode res;
+	std::string url = "http://www.wanikani.com/api/v1/user/" + key + "/kanji";
 
 	if(curl)
 	{
-		std::string url = "http://www.wanikani.com/api/v1/user/" + key + "/kanji";
 
 		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
@@ -35,7 +35,7 @@ std::vector<Kanji> API::get(std::string key)
 	}
 	if(res)
 	{
-		std::cerr << "Error accesing api, code: " << res << std::endl;
+		std::cerr << "Error accesing api, " << curl_easy_strerror(res) << std::endl;
 		exit(1);
 	}
 	
@@ -46,6 +46,24 @@ std::vector<Kanji> API::get(std::string key)
 
 	Json::Value requested_information = root["requested_information"];
 	
+	if(requested_information.isNull())
+	{
+		Json::Value wanikani_error = root["error"];
+		if(wanikani_error.isNull())
+		{
+			std::cerr << "Wanikani didn't return requested information, but did not return error either. Site might be under construction.\n";
+			exit(1);
+		}
+		else
+		{
+			std::string errorCode = wanikani_error["code"].asString();
+			std::string errorMessage = wanikani_error["message"].asString();
+			std::cerr << "API error (" << errorCode << "): " << errorMessage << std::endl;
+			exit(1);
+		}
+
+	}
+
 	for(int i = 0; i < requested_information.size(); i++)
 	{
 		std::string character = requested_information[i]["character"].asString();
