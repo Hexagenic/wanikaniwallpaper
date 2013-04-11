@@ -42,7 +42,13 @@ std::vector<Kanji> API::get(std::string key)
 	Json::Value root;
 	Json::Reader reader;
 
-	reader.parse(buffer, root);
+	bool successfullParse = reader.parse(buffer, root);
+
+	if(!successfullParse)
+	{
+		std::cerr << "Was not able to parse api, is it really json?\n";
+		exit(1);
+	}
 
 	Json::Value requested_information = root["requested_information"];
 	
