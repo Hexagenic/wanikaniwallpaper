@@ -58,9 +58,9 @@ void drawGlyph(int* buffer, int bufferPitch, int originX, int originY, FT_GlyphS
 
 			int bufferPos = bufferX + bufferY * bufferPitch;
 
-            uint32_t r = bitmap.buffer[glyphPos + 0];
+            uint32_t r = bitmap.buffer[glyphPos + 2];
             uint32_t g = bitmap.buffer[glyphPos + 1];
-			uint32_t b = bitmap.buffer[glyphPos + 2];
+			uint32_t b = bitmap.buffer[glyphPos + 0];
 
 			// TODO: HACK: Should not need to get alpha from RGB.
 			uint32_t a = (r + g + b) / 3;
