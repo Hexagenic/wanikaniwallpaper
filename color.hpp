@@ -11,11 +11,15 @@ class Color
 public:
 	Color();
 	Color(const std::string hexcode);
+	Color(uint32_t abgr);
 	Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha = 0xFF);
 	Color(const Color &other);
 	
-    Color operator*(const Color& other);
+    Color operator+(const Color& other) const;
+    Color operator*(const Color& other) const;
     Color& operator*=(const Color& other);
+    
+	Color operator*(uint8_t scalar) const;
 
 	const uint32_t ABGR() const;
 	void ABGR(uint32_t abgr);

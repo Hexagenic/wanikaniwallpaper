@@ -64,6 +64,11 @@ Color::Color(const std::string hexcode)
 	ABGRToComp(abgr, r_, g_, b_, a_);
 }
 
+Color::Color(uint32_t abgr)
+{
+	ABGRToComp(abgr, r_, g_, b_, a_);
+}
+
 Color::Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
 	: r_(red)
 	, g_(green)
@@ -80,7 +85,16 @@ Color::Color(const Color &other)
 {
 }
 
-Color Color::operator*(const Color& other)
+Color Color::operator+(const Color& other) const
+{
+	return Color(
+			r_ + other.r_,
+			g_ + other.g_,
+			b_ + other.b_,
+			a_ + other.a_);
+}
+
+Color Color::operator*(const Color& other) const
 {
 	return Color(
 			(r_ * other.r_) / 0xFF,
@@ -97,7 +111,16 @@ Color& Color::operator*=(const Color& other)
 	a_ = (a_ * other.a_) / 0xFF;
 
 	return *this;
-}	
+}
+
+Color Color::operator*(uint8_t scalar) const
+{
+	return Color(
+			(r_ * scalar) / 0xFF,
+			(g_ * scalar) / 0xFF,
+			(b_ * scalar) / 0xFF,
+			(a_ * scalar) / 0xFF);
+}
 
 const uint32_t Color::ABGR() const
 {

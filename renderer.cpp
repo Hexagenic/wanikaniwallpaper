@@ -9,6 +9,38 @@
 #include "color.hpp"
 #include <iomanip>
 
+void alphaFromColor(uint8_t& r, uint8_t& g, uint8_t& b, uint8_t& a)
+{
+	if (r > g && r > b)
+	{
+		a = r;
+		r = 0xFF;
+		g = (0xFF * g) / a;
+		b = (0xFF * b) / a;
+	}
+	else if(g > r && g > b)
+	{
+		a = g;
+		g = 0xFF;
+		r = (0xFF * r) / a;
+		b = (0xFF * b) / a;
+	}
+	else if(b > r && b > g)
+	{
+		a = b;
+		b = 0xFF;
+		r = (0xFF * r) / a;
+		g = (0xFF * g) / a;
+	}
+	else
+	{
+		a = r;
+		r = 0xFF;
+		g = 0xFF;
+		b = 0xFF;
+	}
+}
+
 void png_user_warn(png_structp ctx, png_const_charp str)
 {
 	std::cerr << "libPNG warning: " << str << std::endl; 
@@ -58,37 +90,21 @@ void drawGlyph(int* buffer, int bufferPitch, int originX, int originY, FT_GlyphS
 
 			int bufferPos = bufferX + bufferY * bufferPitch;
 
-            int r = bitmap.buffer[glyphPos + 0];
-            int g = bitmap.buffer[glyphPos + 1];
-			int b = bitmap.buffer[glyphPos + 2];
+            uint32_t r = bitmap.buffer[glyphPos + 0];
+            uint32_t g = bitmap.buffer[glyphPos + 1];
+			uint32_t b = bitmap.buffer[glyphPos + 2];
+
+			// TODO: HACK: Should not need to get alpha from RGB.
+			uint32_t a = (0xFF * (r + g + b)) / (0xFF + 0xFF + 0xFF);
 
 			wanikani::Color colorOut(r,g,b);
 
             colorOut *= colorIn;
 
-			buffer[bufferPos] = colorOut.ABGR();
+			// Overlay alpha compositing
+			buffer[bufferPos] = ((colorOut * a) + wanikani::Color(buffer[bufferPos]) * (0xFF - a)).ABGR();
 		}
 	}	
-}
-
-uint32_t lerp(uint32_t a, uint32_t b, double x)
-{
-    uint8_t aR = (0xFF & a);
-	uint8_t aG = (0xFF00 & a) >> 8;
-	uint8_t aB = (0xFF0000 & a) >> 16;
-    
-	uint8_t bR = (0xFF & b);
-	uint8_t bG = (0xFF00 & b) >> 8;
-	uint8_t bB = (0xFF0000 & b) >> 16;
-
-	uint8_t oR = (aR * x) + (bR * (1 - x));
-	uint8_t oG = (aG * x) + (bG * (1 - x));
-	uint8_t oB = (aB * x) + (bB * (1 - x));
-
-    if(oR > 0xFF || oR < 0)
-		std::cout << oR << std::endl;
-
-	return (0xFF << 24) + (oB << 16) + (oG << 8) + oR;
 }
 
 namespace wanikani
