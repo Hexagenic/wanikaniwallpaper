@@ -9,38 +9,6 @@
 #include "color.hpp"
 #include <iomanip>
 
-void alphaFromColor(uint8_t& r, uint8_t& g, uint8_t& b, uint8_t& a)
-{
-	if (r > g && r > b)
-	{
-		a = r;
-		r = 0xFF;
-		g = (0xFF * g) / a;
-		b = (0xFF * b) / a;
-	}
-	else if(g > r && g > b)
-	{
-		a = g;
-		g = 0xFF;
-		r = (0xFF * r) / a;
-		b = (0xFF * b) / a;
-	}
-	else if(b > r && b > g)
-	{
-		a = b;
-		b = 0xFF;
-		r = (0xFF * r) / a;
-		g = (0xFF * g) / a;
-	}
-	else
-	{
-		a = r;
-		r = 0xFF;
-		g = 0xFF;
-		b = 0xFF;
-	}
-}
-
 void png_user_warn(png_structp ctx, png_const_charp str)
 {
 	std::cerr << "libPNG warning: " << str << std::endl; 
