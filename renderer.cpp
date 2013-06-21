@@ -63,7 +63,7 @@ void drawGlyph(int* buffer, int bufferPitch, int originX, int originY, FT_GlyphS
 			uint32_t b = bitmap.buffer[glyphPos + 2];
 
 			// TODO: HACK: Should not need to get alpha from RGB.
-			uint32_t a = (0xFF * (r + g + b)) / (0xFF + 0xFF + 0xFF);
+			uint32_t a = (r + g + b) / 3;
 
 			wanikani::Color colorOut(r,g,b);
 
