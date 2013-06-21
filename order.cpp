@@ -45,10 +45,13 @@ namespace wanikani
 			if(character != 10)
 			{
 				std::string utf8Character;
-				utf8::utf32to8(wideString.begin() + i, wideString.begin() + i, back_inserter(utf8Character));
+				utf8::utf32to8(wideString.begin() + i, wideString.begin() + i + 1, back_inserter(utf8Character));
 				Kanji kanji(character, utf8Character);
 
 				intToChar_[index] = character;
+				if(charToInt_.find(character) != charToInt_.end())
+					std::cout << "Duplicate character: " << kanji.utf8Character()
+						<< ", utf32: " << std::hex << character << std::dec << std::endl;
 				charToInt_[character] = index;
 				charToKanji_[character] = kanji;
 				index++;

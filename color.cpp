@@ -51,33 +51,62 @@ namespace wanikani
 {
 
 Color::Color()
-	:abgr_(0xFF000000)
+	: a_(0xFF)
+	, b_(0x00)
+	, g_(0x00)
+	, r_(0x00)
 {
 }
 
 Color::Color(const std::string hexcode)
-	:abgr_(hexToABGR(hexcode))
 {
+	uint32_t abgr = hexToABGR(hexcode);	
+	ABGRToComp(abgr, r_, g_, b_, a_);
 }
 
 Color::Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
-	:abgr_(compToABGR(red, green, blue, alpha))
+	: r_(red)
+	, g_(green)
+	, b_(blue)
+	, a_(alpha)
 {
 }
 
 Color::Color(const Color &other)
-	:abgr_(other.abgr_)
+	: r_(other.r_)
+	, g_(other.g_)
+	, b_(other.b_)
+	, a_(other.a_)
 {
 }
 
+Color Color::operator*(const Color& other)
+{
+	return Color(
+			(r_ * other.r_) / 0xFF,
+			(g_ * other.g_) / 0xFF,
+			(b_ * other.b_) / 0xFF,
+			(a_ * other.a_) / 0xFF);
+}
+
+Color& Color::operator*=(const Color& other)
+{
+	r_ = (r_ * other.r_) / 0xFF;
+	g_ = (g_ * other.g_) / 0xFF;
+	b_ = (b_ * other.b_) / 0xFF;
+	a_ = (a_ * other.a_) / 0xFF;
+
+	return *this;
+}	
+
 const uint32_t Color::ABGR() const
 {
-	return abgr_;
+	return compToABGR(r_, g_, b_, a_);
 }
 
 void Color::ABGR(uint32_t abgr)
 {
-	abgr_ = abgr;
+	ABGRToComp(abgr, r_, g_, b_, a_);
 }
 
 uint32_t Color::compToABGR(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
@@ -98,6 +127,13 @@ uint32_t Color::hexToABGR(const std::string hexcode)
 	else 
 		return 0xFFFF00FF;
 
+}
+void Color::ABGRToComp(uint32_t abgr, uint8_t& red, uint8_t& green, uint8_t& blue, uint8_t& alpha)
+{
+	alpha = (abgr >> 24) & 0xFF;
+	blue  = (abgr >> 16) & 0xFF;
+	green = (abgr >>  8) & 0xFF;
+	red   = (abgr >>  0) & 0xFF;
 }
 
 }

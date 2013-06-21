@@ -6,6 +6,7 @@
 #define PNG_SKIP_SETJMP_CHECK
 #include <png.h>
 #include "grid.hpp"
+#include "color.hpp"
 #include <iomanip>
 
 void png_user_warn(png_structp ctx, png_const_charp str)
@@ -29,12 +30,45 @@ void renderGlyph(FT_Face &face, int charCode)
 		exit(1);
 	}
 
-	error = FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL);
+	error = FT_Render_Glyph(face->glyph, FT_RENDER_MODE_LCD);
 	if(error)
 	{
 		std::cerr << "Could not render glyph, code: " << error << std::endl;
 		exit(1);
 	}
+}
+
+void drawGlyph(int* buffer, int bufferPitch, int originX, int originY, FT_GlyphSlot glyph, int fontSize, wanikani::Color colorIn)
+{
+	FT_Bitmap bitmap = glyph->bitmap;
+	int glyphWidth = bitmap.width;
+	int glyphHeight = bitmap.rows;
+	int glyphPitch = bitmap.pitch;
+	int glyphLeft = glyph->bitmap_left;
+	int glyphTop = fontSize - glyph->bitmap_top;
+
+	for (int glyphX = 0; glyphX < glyphWidth / 3; glyphX++)
+	{
+		for (int glyphY = 0; glyphY < glyphHeight; glyphY++)
+		{
+			int glyphPos = glyphX*3 + glyphY * glyphPitch;	
+
+			int bufferX = originX + glyphX + glyphLeft;
+			int bufferY = originY + glyphY + glyphTop;
+
+			int bufferPos = bufferX + bufferY * bufferPitch;
+
+            int r = bitmap.buffer[glyphPos + 0];
+            int g = bitmap.buffer[glyphPos + 1];
+			int b = bitmap.buffer[glyphPos + 2];
+
+			wanikani::Color colorOut(r,g,b);
+
+            colorOut *= colorIn;
+
+			buffer[bufferPos] = colorOut.ABGR();
+		}
+	}	
 }
 
 uint32_t lerp(uint32_t a, uint32_t b, double x)
@@ -125,37 +159,10 @@ void Renderer::render(Order &order)
 		int gridX = (i % w) * characterWidth + marginLeft_;
 		int gridY = (i / w) * characterHeight + marginTop_;
 
+
 		renderGlyph(face_, order.kanji(i).character());
-		FT_GlyphSlot glyph = face_->glyph;
-		FT_Bitmap bitmap = glyph->bitmap;
-
-		int glyphWidth = bitmap.width;	
-		int glyphHeight = bitmap.rows;
-		int glyphLeft = glyph->bitmap_left;
-		int glyphTop = fontSize - glyph->bitmap_top;
-
-		for(int glyphX = 0; glyphX < glyphWidth; glyphX++)
-		{
-			for(int glyphY = 0; glyphY < glyphHeight; glyphY++)
-			{
-				int x = gridX + glyphX + glyphLeft;
-				int y = gridY + glyphY + glyphTop;
-				int pos = x + y * width_;
-
-				int glyphPos = glyphX + glyphY * glyphWidth;
-
-				if(pos < width_ * height_)
-				{
-					int aCol = SRSColor(order.kanji(i).SRS()).ABGR();
-                    int bCol = buffer_[pos];
-                    double alpha = double(bitmap.buffer[glyphPos]) / double(0xFF);
-					
-					int nCol = lerp(aCol, bCol, alpha);
-
-					buffer_[pos] = nCol;
-				}
-			}
-		}
+		
+		drawGlyph(buffer_, width_, gridX, gridY, face_->glyph, fontSize, SRSColor(order.kanji(i).SRS()));
 	}
 }
 
