@@ -38,7 +38,7 @@ Building on Debian-based linux systems requires the following packages:
  * `libutfcpp-dev`
  * `libcurl3-dev`
  * `libjsoncpp-dev`
- * `libboost-all-dev`
+ * `libboost-program-options-dev`
 
 Running requires a TTF font with Kanji available. The default is `ipag.ttf`
 which is available [from this repository][ipag].
