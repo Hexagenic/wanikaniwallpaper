@@ -24,7 +24,7 @@ std::vector<Kanji> API::get(std::string key)
 
 	CURL *curl = curl_easy_init();
 	CURLcode res;
-	std::string url = "http://www.wanikani.com/api/v1/user/" + key + "/kanji";
+	std::string url = "https://www.wanikani.com/api/v1/user/" + key + "/kanji";
 
 	if(curl)
 	{
