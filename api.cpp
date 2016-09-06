@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <sstream>
 #include <curl/curl.h>
-#include <jsoncpp/json/json.h>
+#include <json/json.h>
 #include <utf8.h>
 
 std::stringstream buffer;
