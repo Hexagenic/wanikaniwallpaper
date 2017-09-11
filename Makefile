@@ -11,7 +11,7 @@ FREETYPEFLAGS := $(shell pkg-config --cflags --libs freetype2)
 CFLAGS := $(LIBPNGFLAGS) $(LIBCURLFLAGS) $(JSONCPPFLAGS) $(FREETYPEFLAGS) -lboost_program_options
 
 wanikaniwallpaper: ${OBJ_FILES}
-	g++ $(CFLAGS) ${OBJ_FILES} -o wanikaniwallpaper
+	g++ ${OBJ_FILES} $(CFLAGS) -o wanikaniwallpaper
 
 %.o: %.cpp ${HEADER_FILES}
 	g++ $(CFLAGS) -I/usr/include/freetype2 -o $@ $< -c
