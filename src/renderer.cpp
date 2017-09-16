@@ -38,7 +38,10 @@ void renderGlyph(FT_Face &face, int charCode)
 	}
 }
 
-void drawGlyph(int* buffer, int bufferPitch, int originX, int originY, FT_GlyphSlot glyph, int fontSize, wanikani::Color colorIn)
+namespace wanikani
+{
+
+void Renderer::drawGlyph(int originX, int originY, FT_GlyphSlot glyph, int fontSize, wanikani::Color colorIn)
 {
 	FT_Bitmap bitmap = glyph->bitmap;
 	int glyphWidth = bitmap.width;
@@ -56,10 +59,15 @@ void drawGlyph(int* buffer, int bufferPitch, int originX, int originY, FT_GlyphS
 			int bufferX = originX + glyphX + glyphLeft;
 			int bufferY = originY + glyphY + glyphTop;
 
-			int bufferPos = bufferX + bufferY * bufferPitch;
+			if (bufferX < 0 || bufferX >= width_ || bufferY < 0 || bufferY >= height_) {
+				continue;
+			}
 
-            uint32_t r = bitmap.buffer[glyphPos + 2];
-            uint32_t g = bitmap.buffer[glyphPos + 1];
+
+			int bufferPos = bufferX + bufferY * width_;
+			
+			uint32_t r = bitmap.buffer[glyphPos + 2];
+			uint32_t g = bitmap.buffer[glyphPos + 1];
 			uint32_t b = bitmap.buffer[glyphPos + 0];
 
 			// TODO: HACK: Should not need to get alpha from RGB.
@@ -70,13 +78,10 @@ void drawGlyph(int* buffer, int bufferPitch, int originX, int originY, FT_GlyphS
             colorOut *= colorIn;
 
 			// Overlay alpha compositing
-			buffer[bufferPos] = ((colorOut * a) + wanikani::Color(buffer[bufferPos]) * (0xFF - a)).ABGR();
+			buffer_[bufferPos] = ((colorOut * a) + wanikani::Color(buffer_[bufferPos]) * (0xFF - a)).ABGR();
 		}
 	}	
 }
-
-namespace wanikani
-{
 
 Renderer::Renderer(int width, int height, std::string fontName)
 	:width_(width)
@@ -145,8 +150,7 @@ void Renderer::render(Order &order)
 
 
 		renderGlyph(face_, order.kanji(i).character());
-		
-		drawGlyph(buffer_, width_, gridX, gridY, face_->glyph, fontSize, SRSColor(order.kanji(i).SRS()));
+		drawGlyph(gridX, gridY, face_->glyph, fontSize, SRSColor(order.kanji(i).SRS()));
 	}
 }
 
@@ -223,6 +227,8 @@ Color Renderer::SRSColor(WaniKaniSRS srs)
 			return colorError_;
 	}
 }	
+
+
 
 
 }

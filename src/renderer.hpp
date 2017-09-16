@@ -28,6 +28,8 @@ public:
 	Color SRSColor(WaniKaniSRS srs);
 
 private:
+	void drawGlyph(int originX, int originY, FT_GlyphSlot glyph, int fontSize, wanikani::Color colorIn);
+
 	FT_Library library_;
 	FT_Face face_;
 	int width_, height_;
