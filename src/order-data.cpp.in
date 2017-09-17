@@ -1,0 +1,6 @@
+#include "order-data.hpp"
+
+namespace wanikani
+{
+const std::string orderData = R"ORDER(@ORDER@)ORDER";
+}

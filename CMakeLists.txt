@@ -12,6 +12,7 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(JSONCPP jsoncpp)
 
 include_directories(
+  src
   ${FREETYPE_INCLUDE_DIRS}
   ${PNG_INCLUDE_DIRS}
   ${CURL_INCLUDE_DIRS}
@@ -32,8 +33,14 @@ set(SRC
   src/options.cpp
   src/order.hpp
   src/order.cpp
+  src/order-data.hpp
+  ${CMAKE_CURRENT_BINARY_DIR}/src/order-data.cpp
   src/renderer.hpp
   src/renderer.cpp)
+
+file(READ ${CMAKE_SOURCE_DIR}/order ORDER)
+
+configure_file("src/order-data.cpp.in" "src/order-data.cpp")
 
 add_executable(wanikaniwallpaper ${SRC})
 

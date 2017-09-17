@@ -1,40 +1,20 @@
 #include "order.hpp"
 #include "kanji.hpp"
+#include "order-data.hpp"
 
 #include <stdlib.h>
 #include <iostream>
 #include <iomanip>
-#include <fstream>
-#include <sstream>
 #include <utf8.h>
 #include <vector>
 using std::string;
 
 namespace wanikani
 {
-	Order::Order(string filename)
+	Order::Order()
 	{
-		std::ifstream orderFile;
-		orderFile.open(filename.c_str());
-
-        if(orderFile.fail())
-		{
-			std::cerr << "Could no open file " << filename << " for reading.\n";
-			exit(1);
-		}
-
-		orderFile.seekg(0, orderFile.end);
-		int length = orderFile.tellg();
-		orderFile.seekg(0, orderFile.beg);
-
-		char *buffer = new char[length];
-
-		orderFile.read(buffer, length);
-
-		orderFile.close();
-
 		std::vector<int> wideString;
-		utf8::utf8to32(buffer, buffer + length, back_inserter(wideString));
+		utf8::utf8to32(orderData.begin(), orderData.end(), back_inserter(wideString));
 
 		int index = 0;
 		for(int i = 0; i < wideString.size(); i++)

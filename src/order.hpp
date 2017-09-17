@@ -11,7 +11,7 @@ namespace wanikani
 class Order
 {
 public:
-	Order(std::string filename = "order");
+	Order();
 	void update(std::vector<Kanji> list);
 	int position(int character);
 	int character(int position);
