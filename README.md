@@ -1,6 +1,8 @@
 wanikaniwallpaper
 =================
 
+[![Build Status](https://travis-ci.org/Hexagenic/wanikaniwallpaper.svg?branch=master)](https://travis-ci.org/Hexagenic/wanikaniwallpaper)
+
 Create a wallpaper based on your WaniKani progress.
 
 ## Usage
