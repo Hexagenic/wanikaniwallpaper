@@ -6,5 +6,10 @@ compiler:
   - clang
 os:
   - linux
+addons:
+  apt:
+    packages:
+      - libboost-program-options-dev
+      - libjsoncpp-dev
 script:
   - cmake -H. -Bbuild && cd build && make
