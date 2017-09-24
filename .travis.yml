@@ -11,5 +11,6 @@ addons:
     packages:
       - libboost-program-options-dev
       - libjsoncpp-dev
+      - libutfcpp-dev
 script:
   - cmake -H. -Bbuild && cd build && make
