@@ -1,0 +1,10 @@
+language: cpp
+sudo: false
+dist: trusty
+compiler:
+  - gcc
+  - clang
+os:
+  - linux
+script:
+  - cmake -H. -Bbuild && cd build && make
