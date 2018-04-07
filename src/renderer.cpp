@@ -150,7 +150,12 @@ void Renderer::render(Order &order)
 
 
 		renderGlyph(face_, order.kanji(i).character());
-		drawGlyph(gridX, gridY, face_->glyph, fontSize, SRSColor(order.kanji(i).SRS()));
+		WaniKaniSRS srs = order.kanji(i).SRS();
+		if (srs < SRS_APPRENTICE && i < heisigIndex_)
+		{
+			srs = SRS_HEISIG;
+		}
+		drawGlyph(gridX, gridY, face_->glyph, fontSize, SRSColor(srs));
 	}
 }
 
@@ -200,12 +205,14 @@ void Renderer::save(std::string fileName)
 
 void Renderer::setBackground(Color color) { colorBackground_ = color; }
 void Renderer::setUnseen(Color color) { colorUnseen_ = color; }
+void Renderer::setHeisig(Color color) { colorHeisig_ = color; }
 void Renderer::setApprentice(Color color) { colorApprentice_ = color; }
 void Renderer::setGuru(Color color) { colorGuru_ = color; }
 void Renderer::setMaster(Color color) { colorMaster_ = color; }
 void Renderer::setEnlightened(Color color) { colorEnlightened_ = color; }
 void Renderer::setBurned(Color color) { colorBurned_ = color; }
 void Renderer::setError(Color color) { colorError_ = color; }
+void Renderer::setHeisigIndex(int index) { heisigIndex_ = index; }
 
 Color Renderer::SRSColor(WaniKaniSRS srs)
 {
@@ -213,6 +220,8 @@ Color Renderer::SRSColor(WaniKaniSRS srs)
 	{
 		case SRS_UNSEEN:
 			return colorUnseen_;
+		case SRS_HEISIG:
+			return colorHeisig_;
 		case SRS_APPRENTICE:
 			return colorApprentice_;
 		case SRS_GURU:

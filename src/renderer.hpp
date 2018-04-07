@@ -18,12 +18,14 @@ public:
 	void save(std::string fileName);
 	void setBackground(Color color);
 	void setUnseen(Color color);
+	void setHeisig(Color color);
 	void setApprentice(Color color);
 	void setGuru(Color color);
 	void setMaster(Color color);
 	void setEnlightened(Color color);
 	void setBurned(Color color);
 	void setError(Color color);
+	void setHeisigIndex(int index);
 
 	Color SRSColor(WaniKaniSRS srs);
 
@@ -34,7 +36,8 @@ private:
 	FT_Face face_;
 	int width_, height_;
 	int marginLeft_, marginRight_, marginTop_, marginBottom_;
-	Color colorBackground_, colorUnseen_, colorApprentice_, colorGuru_, colorMaster_, colorEnlightened_, colorBurned_, colorError_;
+	Color colorBackground_, colorUnseen_, colorHeisig_, colorApprentice_, colorGuru_, colorMaster_, colorEnlightened_, colorBurned_, colorError_;
+	int heisigIndex_;
 	int *buffer_;
 };
 }

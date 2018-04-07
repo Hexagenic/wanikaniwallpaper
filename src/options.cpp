@@ -14,6 +14,7 @@ Options::Options(int argc, char **argv)
 
 	std::string colorBackgroundString, 
 		colorUnseenString, 
+		colorHeisigString,
 		colorApprenticeString,
 		colorGuruString,
 		colorMasterString,
@@ -28,12 +29,14 @@ Options::Options(int argc, char **argv)
 		("height,h", po::value<int>(&height_)->default_value(1080), "Height of wallpaper")
 		("out,o", po::value<std::string>(&outFileName_)->default_value("out.png"), "Output filename")
 		("font,f", po::value<std::string>(&fontFileName_)->default_value("ipag.ttf"), "Relative or absolute font filepath")
+		("heisig-index,i", po::value<int>(&heisigIndex_)->default_value(0), "Progress in Heisig's RTK (6th edition)")
 		("margin-left", po::value<int>(&marginLeft_)->default_value(0), "Space to leave blank to the left")
 		("margin-right", po::value<int>(&marginRight_)->default_value(0), "Space to leave blank to the right")
 		("margin-top", po::value<int>(&marginTop_)->default_value(0), "Space to leave blank to the top")
 		("margin-bottom", po::value<int>(&marginBottom_)->default_value(0), "Space to leave blank to the bottom")
 		("color-background", po::value<std::string>(&colorBackgroundString)->default_value("0x000000"), "Color for background")
 		("color-unseen", po::value<std::string>(&colorUnseenString)->default_value("0x303030"), "Color for unseen characters")
+		("color-heisig", po::value<std::string>(&colorHeisigString)->default_value("0x33FF33"), "Color for Heisig characters")
 		("color-apprentice", po::value<std::string>(&colorApprenticeString)->default_value("0xDD0093"), "Color for apprentice characters")
 		("color-guru", po::value<std::string>(&colorGuruString)->default_value("0x882D9E"), "Color for guru characters")
 		("color-master", po::value<std::string>(&colorMasterString)->default_value("0x294DDB"), "Color for master characters")
@@ -68,6 +71,7 @@ Options::Options(int argc, char **argv)
 
 	colorBackground_ = Color(colorBackgroundString);
 	colorUnseen_ = Color(colorUnseenString);
+	colorHeisig_ = Color(colorHeisigString);
 	colorApprentice_ = Color(colorApprenticeString);
 	colorGuru_ = Color(colorGuruString);
 	colorMaster_ = Color(colorMasterString);
@@ -108,12 +112,15 @@ const int Options::marginBottom() const { return marginBottom_; }
 
 const Color Options::colorBackground() const { return colorBackground_; }
 const Color Options::colorUnseen() const { return colorUnseen_; }
+const Color Options::colorHeisig() const { return colorHeisig_; }
 const Color Options::colorApprentice() const { return colorApprentice_; }
 const Color Options::colorGuru() const { return colorGuru_; }
 const Color Options::colorMaster() const { return colorMaster_; }
 const Color Options::colorEnlightened() const { return colorEnlightened_; }
 const Color Options::colorBurned() const { return colorBurned_; }
 const Color Options::colorError() const { return colorError_; }
+
+const int Options::heisigIndex() const { return heisigIndex_; }
 
 const bool Options::helpRequested() const
 {

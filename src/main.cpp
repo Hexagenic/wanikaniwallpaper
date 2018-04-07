@@ -19,12 +19,14 @@ int main(int argc, char **argv)
 		renderer.setMargins(options.marginLeft(), options.marginRight(), options.marginTop(), options.marginBottom());
 		renderer.setBackground(options.colorBackground());
 		renderer.setUnseen(options.colorUnseen());
+		renderer.setHeisig(options.colorHeisig());
 		renderer.setApprentice(options.colorApprentice());
 		renderer.setGuru(options.colorGuru());
 		renderer.setMaster(options.colorMaster());
 		renderer.setEnlightened(options.colorEnlightened());
 		renderer.setBurned(options.colorBurned());
 		renderer.setError(options.colorError());
+		renderer.setHeisigIndex(options.heisigIndex());
 		
 		renderer.render(order);
 		renderer.save(options.outFileName());
