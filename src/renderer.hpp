@@ -25,7 +25,6 @@ public:
 	void setEnlightened(Color color);
 	void setBurned(Color color);
 	void setError(Color color);
-	void setHeisigIndex(int index);
 
 	Color SRSColor(WaniKaniSRS srs);
 
@@ -37,7 +36,6 @@ private:
 	int width_, height_;
 	int marginLeft_, marginRight_, marginTop_, marginBottom_;
 	Color colorBackground_, colorUnseen_, colorHeisig_, colorApprentice_, colorGuru_, colorMaster_, colorEnlightened_, colorBurned_, colorError_;
-	int heisigIndex_;
 	int *buffer_;
 };
 }

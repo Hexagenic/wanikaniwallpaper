@@ -150,12 +150,7 @@ void Renderer::render(Order &order)
 
 
 		renderGlyph(face_, order.kanji(i).character());
-		WaniKaniSRS srs = order.kanji(i).SRS();
-		if (srs < SRS_APPRENTICE && i < heisigIndex_)
-		{
-			srs = SRS_HEISIG;
-		}
-		drawGlyph(gridX, gridY, face_->glyph, fontSize, SRSColor(srs));
+		drawGlyph(gridX, gridY, face_->glyph, fontSize, SRSColor(order.kanji(i).SRS()));
 	}
 }
 
@@ -212,7 +207,6 @@ void Renderer::setMaster(Color color) { colorMaster_ = color; }
 void Renderer::setEnlightened(Color color) { colorEnlightened_ = color; }
 void Renderer::setBurned(Color color) { colorBurned_ = color; }
 void Renderer::setError(Color color) { colorError_ = color; }
-void Renderer::setHeisigIndex(int index) { heisigIndex_ = index; }
 
 Color Renderer::SRSColor(WaniKaniSRS srs)
 {

@@ -15,6 +15,7 @@ int main(int argc, char **argv)
 		wanikani::Order order;
 
 		order.update(wanikani::API::get(options.apikey().get()));
+		order.updateHeisig(options.heisigIndex());
 
 		renderer.setMargins(options.marginLeft(), options.marginRight(), options.marginTop(), options.marginBottom());
 		renderer.setBackground(options.colorBackground());
@@ -26,8 +27,7 @@ int main(int argc, char **argv)
 		renderer.setEnlightened(options.colorEnlightened());
 		renderer.setBurned(options.colorBurned());
 		renderer.setError(options.colorError());
-		renderer.setHeisigIndex(options.heisigIndex());
-		
+
 		renderer.render(order);
 		renderer.save(options.outFileName());
 	}
