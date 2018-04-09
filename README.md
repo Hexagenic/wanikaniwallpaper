@@ -22,7 +22,7 @@ Command line options:
   --margin-bottom arg (=0)            Space to leave blank to the bottom
   --color-background arg (=0x000000)  Color for background
   --color-unseen arg (=0x303030)      Color for unseen characters
-  --color-heisig arg (=0xDD0093)      Color for Heisig characters
+  --color-heisig arg (=0xA0A0A0)      Color for Heisig characters
   --color-apprentice arg (=0xDD0093)  Color for apprentice characters
   --color-guru arg (=0x882D9E)        Color for guru characters
   --color-master arg (=0x294DDB)      Color for master characters
