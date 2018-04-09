@@ -1,0 +1,6 @@
+#include "heisig-data.hpp"
+
+namespace wanikani
+{
+const std::string heisigData = R"HEISIG(@HEISIG@)HEISIG";
+}

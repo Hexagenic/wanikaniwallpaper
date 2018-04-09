@@ -37,12 +37,16 @@ set(SRC
   src/order.cpp
   src/order-data.hpp
   ${CMAKE_CURRENT_BINARY_DIR}/src/order-data.cpp
+  src/heisig-data.hpp
+  ${CMAKE_CURRENT_BINARY_DIR}/src/heisig-data.cpp
   src/renderer.hpp
   src/renderer.cpp)
 
 file(READ ${CMAKE_SOURCE_DIR}/order ORDER)
+file(READ ${CMAKE_SOURCE_DIR}/heisig HEISIG)
 
 configure_file("src/order-data.cpp.in" "src/order-data.cpp")
+configure_file("src/heisig-data.cpp.in" "src/heisig-data.cpp")
 
 add_executable(wanikaniwallpaper ${SRC})
 

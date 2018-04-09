@@ -13,6 +13,7 @@ class Order
 public:
 	Order();
 	void update(std::vector<Kanji> list);
+	void updateHeisig(int index);
 	int position(int character);
 	int character(int position);
 	Kanji kanji(int position);

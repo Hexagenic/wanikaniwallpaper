@@ -37,6 +37,8 @@ const unsigned int Kanji::color() const
 	{
 		case SRS_UNSEEN:
 			return 0xFF505050;
+		case SRS_HEISIG:
+			return 0xFF33FF33;
 		case SRS_APPRENTICE:
 			return 0xFF9300DD;
 		case SRS_GURU:

@@ -200,6 +200,7 @@ void Renderer::save(std::string fileName)
 
 void Renderer::setBackground(Color color) { colorBackground_ = color; }
 void Renderer::setUnseen(Color color) { colorUnseen_ = color; }
+void Renderer::setHeisig(Color color) { colorHeisig_ = color; }
 void Renderer::setApprentice(Color color) { colorApprentice_ = color; }
 void Renderer::setGuru(Color color) { colorGuru_ = color; }
 void Renderer::setMaster(Color color) { colorMaster_ = color; }
@@ -213,6 +214,8 @@ Color Renderer::SRSColor(WaniKaniSRS srs)
 	{
 		case SRS_UNSEEN:
 			return colorUnseen_;
+		case SRS_HEISIG:
+			return colorHeisig_;
 		case SRS_APPRENTICE:
 			return colorApprentice_;
 		case SRS_GURU:

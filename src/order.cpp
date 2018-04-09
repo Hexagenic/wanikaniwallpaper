@@ -1,6 +1,7 @@
 #include "order.hpp"
 #include "kanji.hpp"
 #include "order-data.hpp"
+#include "heisig-data.hpp"
 
 #include <stdlib.h>
 #include <iostream>
@@ -54,6 +55,49 @@ namespace wanikani
 					<< ", utf32: " << std::hex << i->character() << std::dec << std::endl;
 		}
 	}
+
+	void Order::updateHeisig(int given_index)
+	{
+		int index = given_index;
+		std::vector<int> wideString;
+		utf8::utf8to32(heisigData.begin(), heisigData.end(), back_inserter(wideString));
+
+		for(int i = 0; i < index; i++)
+		{
+			int character = wideString[i];
+
+			std::string utf8Character;
+			utf8::utf32to8(wideString.begin() + i, wideString.begin() + i + 1, back_inserter(utf8Character));
+
+			std::map<int, Kanji>::iterator k = charToKanji_.find(character);
+			if (utf8Character == "\n")
+			{
+				index++; // don't count newline
+				if (index > wideString.size())
+				{
+					std::cout << "Invalid Heisig index: " << given_index << std::endl;
+					return;
+				}
+			}
+			else
+			{
+				if (k != charToKanji_.end())
+				{
+					if (k->second.SRS() < SRS_APPRENTICE)
+					{
+						Kanji heisig_kanji(character, utf8Character, SRS_HEISIG);
+						k->second = heisig_kanji;
+					}
+				}
+				else
+				{
+					std::cout << "Kanji from Heisig not found in file: " << utf8Character
+						<< ", utf32: " << std::hex << character << std::dec << std::endl;
+				}
+			}
+		}
+	}
+
 
 	int Order::position(int character)
 	{
