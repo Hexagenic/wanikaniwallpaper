@@ -7,6 +7,9 @@ Create a wallpaper based on your WaniKani progress.
 
 ## Usage
 
+**Running requires a TTF font with Kanji available. The default is `ipag.ttf`
+which is available [from this repository][ipag].**
+
 ```
 $ ./wanikaniwallpaper --help
 Command line options:
@@ -30,21 +33,24 @@ Command line options:
   --color-burned arg (=0xFFFFFF)      Color for burned characters
   --color-error arg (=0xFF0000)       Color for error'ed characters
   --help                              Produce this help message
-
-These options can also be saved in a config.ini file in this directory.
 ```
 
+These options can also be saved in a config.ini file in this directory.
+
 ## Building
-
-Building on Debian-based linux systems requires the following packages:
-
+#### Debian-based Linux systems
+The following packages are required for building:
  * `libfreetype6-dev`
  * `libutfcpp-dev`
  * `libcurl3-dev`
  * `libjsoncpp-dev`
  * `libboost-program-options-dev`
 
-Running requires a TTF font with Kanji available. The default is `ipag.ttf`
-which is available [from this repository][ipag].
+#### macOS
+The following required packages can be installed with [Homebrew][brew]:
+```
+brew install boost jsoncpp utfcpp
+```
 
 [ipag]: https://github.com/hyoshiok/ttf-ipafont
+[brew]: https://brew.sh
