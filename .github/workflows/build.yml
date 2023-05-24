@@ -1,0 +1,25 @@
+name: Build
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+env:
+  BUILD_TYPE: Release
+jobs:
+  build_linux:
+    name: Linux
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, ubuntu-20.04 ]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install dependencies
+      run: sudo apt-get install -y libfreetype6-dev libutfcpp-dev libcurl3-dev libjsoncpp-dev libboost-program-options-dev
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+    - name: Check
+      run: ${{github.workspace}}/build/wanikaniwallpaper --help
