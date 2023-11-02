@@ -46,12 +46,21 @@ dependencies:
 cmake . && cmake --build .
 ```
 
+### Dependencies
+
+#### **`utfcpp`**
+
+`utfcpp` recommends to be packaged into the user repository and is not packaged
+for all major distributions, you will need to compile `utfcpp` by yourself. You
+can simply add it with
+
+`git submodule init && git submodule update`.
+
 #### Debian-based Linux systems
 
 The following packages are required for building:
 
  * `libfreetype6-dev`
- * `libutfcpp-dev`
  * `libcurl3-dev`
  * `libjsoncpp-dev`
  * `libboost-program-options-dev`
@@ -67,12 +76,6 @@ The following `dnf` packages are required for building:
  * `jsoncpp-devel`
  * `cmake`
  * `make`
-
-##### **`utfcpp`**
-
-`utfcpp` is only packaged for OpenSUSE, for any other distribution, you
-will need to compile `utfcpp` by yourself. You can simply initialise the
-submodule with `git submodule init && git submodule update`.
 
 #### macOS
 The following required packages can be installed with [Homebrew][brew]:
