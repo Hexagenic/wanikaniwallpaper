@@ -20,3 +20,6 @@ CMakeCache.txt
 
 # Generated Wallpapers
 *.png
+bin/wanikaniwallpaper
+src/heisig-data.cpp
+src/order-data.cpp

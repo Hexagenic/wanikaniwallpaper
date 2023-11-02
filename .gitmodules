@@ -1,0 +1,6 @@
+[submodule "utfcpp"]
+	path = utfcpp
+	url = https://github.com/nemtrif/utfcpp
+[submodule "lib/utfcpp"]
+	path = lib/utfcpp
+	url = https://github.com/nemtrif/utfcpp

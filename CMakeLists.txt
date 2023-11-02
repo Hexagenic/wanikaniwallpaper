@@ -15,6 +15,7 @@ pkg_check_modules(JSONCPP jsoncpp)
 
 include_directories(
   src
+  include
   ${FREETYPE_INCLUDE_DIRS}
   ${PNG_INCLUDE_DIRS}
   ${CURL_INCLUDE_DIRS}
@@ -48,6 +49,8 @@ file(READ ${CMAKE_SOURCE_DIR}/heisig HEISIG)
 configure_file("src/order-data.cpp.in" "src/order-data.cpp")
 configure_file("src/heisig-data.cpp.in" "src/heisig-data.cpp")
 
+set(CMAKE_BINARY_DIR "bin")
+
 add_executable(wanikaniwallpaper ${SRC})
 
 target_link_libraries(wanikaniwallpaper
@@ -55,5 +58,9 @@ target_link_libraries(wanikaniwallpaper
   ${PNG_LIBRARIES}
   ${CURL_LIBRARIES}
   ${Boost_LIBRARIES}
-  ${JSONCPP_LIBRARIES})
+  ${JSONCPP_LIBRARIES}
+  )
+
+set_target_properties(wanikaniwallpaper PROPERTIES
+  RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 

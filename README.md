@@ -38,13 +38,41 @@ Command line options:
 These options can also be saved in a config.ini file in this directory.
 
 ## Building
+
+You can build and compile the project with `cmake` after installing the
+dependencies:
+
+```bash
+cmake . && cmake --build .
+```
+
 #### Debian-based Linux systems
+
 The following packages are required for building:
+
  * `libfreetype6-dev`
  * `libutfcpp-dev`
  * `libcurl3-dev`
  * `libjsoncpp-dev`
  * `libboost-program-options-dev`
+ * `cmake`
+ * `make`
+
+#### RPM-based Linux systems (fedora)
+
+The following `dnf` packages are required for building:
+ * `boost-devel`
+ * `curlpp-devel`
+ * `freetype-devel`
+ * `jsoncpp-devel`
+ * `cmake`
+ * `make`
+
+##### **`utfcpp`**
+
+`utfcpp` is only packaged for OpenSUSE, for any other distribution, you
+will need to compile `utfcpp` by yourself. You can simply initialise the
+submodule with `git submodule init && git submodule update`.
 
 #### macOS
 The following required packages can be installed with [Homebrew][brew]:
