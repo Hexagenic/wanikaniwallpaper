@@ -7,7 +7,6 @@
 int main(int argc, char **argv)
 {
 	wanikani::Options options(argc, argv);
-
 	if(!options.helpRequested() && options.apikey())
 	{
 		wanikani::Renderer renderer(options.width(), options.height(), options.fontFileName());
