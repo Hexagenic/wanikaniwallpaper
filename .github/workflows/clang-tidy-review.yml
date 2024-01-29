@@ -9,7 +9,7 @@ jobs:
       id: review
       with:
         base_dir: ${{ env.base_dir }}
-        apt_packages: libfreetype6-dev,libutfcpp-dev,libcurl3-dev,libjsoncpp-dev,libboost-program-options-dev
+        apt_packages: libfreetype6-dev,libutfcpp-dev,libcurl3-dev,libjsoncpp-dev,libboost-program-options-dev,pkg-config
         cmake_command: cmake . -DCMAKE_EXPORT_COMPILE_COMMANDS=on
         clang_tidy_checks: '-*,performance-*,readability-*,bugprone-*,clang-analyzer-*,cppcoreguidelines-*,mpi-*,misc-*,google-*'
     - if: steps.review.outputs.total_comments > 0
