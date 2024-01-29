@@ -12,6 +12,11 @@
 *.la
 *.a
 
+# other files generated while building
+bin/wanikaniwallpaper
+src/heisig-data.cpp
+src/order-data.cpp
+
 # CMake Generated files
 CMakeFiles
 Makefile
