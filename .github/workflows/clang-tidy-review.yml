@@ -7,5 +7,7 @@ jobs:
     - uses: actions/checkout@v3
     - uses: ZedThree/clang-tidy-review@v0.13.1
       id: review
+      with:
+        clang_tidy_checks: '-*,performance-*,readability-*,bugprone-*,clang-analyzer-*,cppcoreguidelines-*,mpi-*,misc-*,google-*'
     - if: steps.review.outputs.total_comments > 0
       run: exit 1
